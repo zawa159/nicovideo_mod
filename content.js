@@ -1,45 +1,61 @@
-// $(document).ready(function () {
-//     var currentURL = window.location.href;
-//     console.log("background.js 動作");
-//     // ニコレポ画面の判定
-//     if (currentURL.includes("/my")) {
-//         console.log("ニコレポ画面です");
-//         // ニコレポ画面用の処理
-//         handleNicoRepoPage();
+var handleNicoRepoPageFlg = false;  // ニコレポ画面の判定フラグ
+var handleVideoPageFlg = false;     // 動画画面の判定フラグ
+var etcPageFlg = false;             // その他画面判定フラグ
 
-//         // 動画画面の判定
-//     } else if (currentURL.includes("/watch")) {
-//         console.log("動画画面です");
-//         // 動画画面用の処理
-//         handleVideoPage();
-
-//     } else {
-//         console.log("その他のページです");
-//         // その他のページ用の処理
-//     }
-// });
-
-$(document).on('mouseover', function (e) {
+/**
+ * 画面読み込み時にどの画面か判定
+ */
+$(document).ready(function () {
     var currentURL = window.location.href;
     // console.log("background.js 動作");
     // ニコレポ画面の判定
     if (currentURL.includes("/my")) {
         // console.log("ニコレポ画面です");
         // ニコレポ画面用の処理
-        handleNicoRepoPage();
+        handleNicoRepoPageFlg = true;
 
         // 動画画面の判定
     } else if (currentURL.includes("/watch")) {
-        console.log("動画画面です");
+        // console.log("動画画面です");
         // 動画画面用の処理
-        handleVideoPage();
+        handleVideoPageFlg = true;
 
     } else {
         console.log("その他のページです");
         // その他のページ用の処理
+        etcPageFlg = true;
     }
 });
 
+/**
+ * 現在の画面でマウスカーソルを動かした際に各画面処理を動作
+ */
+$(document).on('mouseover', function (e) {
+
+    // ニコレポ画面の判定
+    if (handleNicoRepoPageFlg === true) {
+
+        console.log("ニコレポ画面用です");
+        // ニコレポ画面用の処理
+        handleNicoRepoPage();
+
+        // 動画画面の判定
+    } else if (handleVideoPageFlg === true) {
+        console.log("動画画面です");
+        // 動画画面用の処理
+        handleVideoPage();
+
+    } else if (etcPageFlg === true) {
+        console.log("その他のページです");
+        // その他のページ用の処理
+    } else {
+        console.log("判定無し");
+    }
+});
+
+/**
+ * ニコレポ画面用の処理
+ */
 function handleNicoRepoPage() {
     // ニコレポ画面用のコード
     $(window).on('scroll', function () {
@@ -47,7 +63,7 @@ function handleNicoRepoPage() {
         var scrollPosition = $(window).scrollTop() + $(window).height();
 
         // ドキュメントの高さ
-        var documentHeight = $(document).height() - 50000 ;  //ロード時間を加味して、下部到達前に動作させる
+        var documentHeight = $(document).height() - 500;  //ロード時間を加味して、下部到達前に動作させる
 
         // ページの一番下に到達したかを判定
         if (scrollPosition > documentHeight) {
@@ -57,25 +73,59 @@ function handleNicoRepoPage() {
     });
 }
 
+/**
+ * 動画再生画面の動画画面上で音量調節する処理
+ */
+// スロットリングのためのタイムアウト
+let throttleTimeout = null;
+const throttleDelay = 0.2; // ミリ秒単位での遅延時間
+
+// 動画画面用の処理
 function handleVideoPage() {
-    console.log("handleVideoPage work!")
-
     // 対象動画プレイヤーを取得
-    //var videoPlayer = $('.grid-area_[player]');
-    // var videoPlayer = $('cursor_inherit ring_none [&_[data-name=storyboard-content]]:filter_[blur(8px)_brightness(0.9)]');
-    var videoPlayer = $('[data-name="storyboard-content"]');
-
-    console.log(videoPlayer);
+    // var videoPlayer = $('[data-name="video-content"]');
+    var videoPlayer = $('video');
 
     // 動画画面上の操作
-    $(videoPlayer).on('mouseover', function (e) {
-        console.log("mouseover");
-    });
-    $(videoPlayer).on('click', function (e) {
-        console.log("click");
-    });
+    // ホイールで音量調整
+    $(videoPlayer).on('wheel', function (event) {
 
-    $(videoPlayer).on('while', function (e) {
-        console.log("ホイール");
+        // デフォルトのスクロールを無効化
+        event.preventDefault();
+
+        // スロットリング処理(連続でホイール判定がおこなわれるため)
+        if (throttleTimeout) return;  // 一定時間内に再度イベントが発生したら無視
+
+        // タイムアウト時間設定
+        throttleTimeout = setTimeout(() => {
+            throttleTimeout = null;  // タイムアウト後に再び処理を許可
+        }, throttleDelay);
+
+        // ホイールが上に動いたか下に動いたかを判定
+        if (event.originalEvent.deltaY < 0) {
+            // キー入力イベントをシミュレート（上矢印）
+            var upArrowEvent = new KeyboardEvent('keydown', {
+                key: 'ArrowUp',
+                keyCode: 38,
+                code: 'ArrowUp',
+                which: 38,
+                bubbles: true
+            });
+            videoPlayer[0].dispatchEvent(upArrowEvent);  // videoPlayer要素にネイティブのキーイベントを発火
+
+        } else {
+            // キー入力イベントをシミュレート（下矢印）
+            var downArrowEvent = new KeyboardEvent('keydown', {
+                key: 'ArrowDown',
+                keyCode: 40,
+                code: 'ArrowDown',
+                which: 40,
+                bubbles: true
+            });
+            videoPlayer[0].dispatchEvent(downArrowEvent);  // videoPlayer要素にネイティブのキーイベントを発火
+        }
     });
 }
+
+
+

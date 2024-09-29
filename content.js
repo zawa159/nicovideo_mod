@@ -5,7 +5,7 @@ var etcPageFlg = false;             // その他画面判定フラグ
 /**
  * 画面読み込み時にどの画面か判定
  */
-$(document).ready(function () {
+$(window).on('load', function () {
     var currentURL = window.location.href;
     // console.log("background.js 動作");
     // ニコレポ画面の判定
@@ -19,6 +19,11 @@ $(document).ready(function () {
         // console.log("動画画面です");
         // 動画画面用の処理
         handleVideoPageFlg = true;
+        //広告のロードが遅いため、ずらして発火
+        setTimeout(function () {
+            openCommentList();
+        }, 5000);  // 5秒後に発火
+
 
     } else {
         console.log("その他のページです");
@@ -63,7 +68,7 @@ function handleNicoRepoPage() {
         var scrollPosition = $(window).scrollTop() + $(window).height();
 
         // ドキュメントの高さ
-        var documentHeight = $(document).height() - 500;  //ロード時間を加味して、下部到達前に動作させる
+        var documentHeight = $(document).height() - 2500;  //ロード時間を加味して、下部到達前に動作させる
 
         // ページの一番下に到達したかを判定
         if (scrollPosition > documentHeight) {
@@ -80,7 +85,7 @@ function handleNicoRepoPage() {
 let throttleTimeout = null;
 const throttleDelay = 0.2; // ミリ秒単位での遅延時間
 
-// 動画画面用の処理
+// 動画画面上での処理
 function handleVideoPage() {
     // 対象動画プレイヤーを取得
     // var videoPlayer = $('[data-name="video-content"]');
@@ -127,5 +132,31 @@ function handleVideoPage() {
     });
 }
 
+/**
+ * コメントを自動で開く処理
+ */
+function openCommentList() {
 
+    // コメントリスト上の広告を取得
+    const commentOnAd = $('[aria-label="Close"]');
+
+    // コメントリストの上に広告があった場合閉じる
+    if (commentOnAd) {
+        commentOnAd.click();  // 広告を閉じる
+    }
+
+    // コメントリストを取得
+    const commentList = $('[aria-label="コメントリスト を開閉する"]');
+
+    // コメントリストが展開中のクラスを取得
+    const targetElement = document.querySelector('.h_100\\%.bg-c_layer.surfaceHighEm.bd-t_m.bd-c_border.highEm.d_flex.flex-d_column');
+
+    // コメントリストが展開中済みか判定
+    if (targetElement) {
+        // コメントリスト
+        if (commentList) {
+            commentList.click();  // コメントリストを展開する
+        }
+    }
+}
 

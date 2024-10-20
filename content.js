@@ -21,7 +21,7 @@ $(window).on('load', function () {
         handleVideoPageFlg = true;
         //広告のロードが遅いため、ずらして発火
         setTimeout(function () {
-            openCommentList();
+            autoOpenOnDisplay();
         }, 5000);  // 5秒後に発火
 
 
@@ -133,10 +133,11 @@ function handleVideoPage() {
 }
 
 /**
- * コメントを自動で開く処理
+ * 画面表示時に自動で開く処理
  */
-function openCommentList() {
+function autoOpenOnDisplay() {
 
+    // コメントリスト上の広告を閉じる処理
     // コメントリスト上の広告を取得
     const commentOnAd = $('[aria-label="Close"]');
 
@@ -145,18 +146,20 @@ function openCommentList() {
         commentOnAd.click();  // 広告を閉じる
     }
 
+    // コメントリストを自動で開く処理
     // コメントリストを取得
     const commentList = $('[aria-label="コメントリスト を開閉する"]');
 
     // コメントリストが展開中のクラスを取得
-    const targetElement = document.querySelector('.h_100\\%.bg-c_layer.surfaceHighEm.bd-t_m.bd-c_border.highEm.d_flex.flex-d_column');
+    const commentListisOpen = $('.h_100\\%.bg-c_layer.surfaceHighEm.bd-t_m.bd-c_border.highEm.d_flex.flex-d_column');
 
-    // コメントリストが展開中済みか判定
-    if (targetElement) {
+    // コメントリストが展開済みか判定
+    if (commentListisOpen === null) {
         // コメントリスト
         if (commentList) {
             commentList.click();  // コメントリストを展開する
+            console.log("autoOpenOnDisplay  動作");
         }
     }
-}
 
+}

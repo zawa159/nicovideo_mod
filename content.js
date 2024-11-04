@@ -2,6 +2,61 @@ var handleNicoRepoPageFlg = false;  // ニコレポ画面の判定フラグ
 var handleVideoPageFlg = false;     // 動画画面の判定フラグ
 var etcPageFlg = false;             // その他画面判定フラグ
 
+
+/**
+ * CSS変更
+ */
+function css() {
+
+    const blacModeBackgroundColor = '#252525';  // 背景色（ブラック）
+    const blacModeWhiteColor = '#ffffff';  // 文字色（白）
+    const blacModeBlueColor = '#007fff';  // 文字色（青）
+    const blacModeRedColor = '#ff00ff';  // 文字色（赤）
+
+    // 背景黒、文字白
+    $('.BaseLayout, .NC-Tab, .UserDetailsHeader, .UserPage-header, .UserDetailsHeader-nickname, .ModalActionButton').css({
+        "background-color": blacModeBackgroundColor,
+        'color': blacModeWhiteColor
+    });
+
+    // 背景青色（選択時）
+    $('.SubMenuLink-link_active').css({
+        'background-color': blacModeBlueColor
+    });
+
+
+    // 背景黒、文字白、枠線
+    $('.TimelineItem-content, .TimelineItem-contentBody, .simplebar-content').css({
+        'background': blacModeBackgroundColor,
+        'color': blacModeWhiteColor,
+        'border': '0.5px solid white'
+    });
+
+    // 背景黒、文字白、枠線(下線)
+    $('.MainMenuContainer-menu').css({
+        'background': blacModeBackgroundColor,
+        'color': blacModeWhiteColor,
+        'border-bottom': '0.5px solid white'
+    });
+
+    // 文字白
+    $('.SubMenuLink-label, .SubMenuHeader-title, .TimelineActorFilterButton-button, .TimelineActorFilterButton-button_selected, .TimelineItem-senderName, .TimelineItem-activityMessage, .TimelineSideContainer-linkButton').css({
+        'color': blacModeWhiteColor
+    });
+
+    // 文字赤
+    $('.TimelineItem-activityCreatedAt').css({
+        'color': blacModeRedColor
+    });
+
+}
+
+// HTMLの構造が読み込み完了した時点で発火
+$(document).ready(function () {
+    css();
+    
+});
+
 /**
  * 画面読み込み時にどの画面か判定
  */
@@ -40,18 +95,19 @@ $(document).on('mouseover', function (e) {
     // ニコレポ画面の判定
     if (handleNicoRepoPageFlg === true) {
 
-        console.log("ニコレポ画面用です");
+        // console.log("ニコレポ画面用です");
         // ニコレポ画面用の処理
         handleNicoRepoPage();
+        css();
 
         // 動画画面の判定
     } else if (handleVideoPageFlg === true) {
-        console.log("動画画面です");
+        // console.log("動画画面です");
         // 動画画面用の処理
         handleVideoPage();
 
     } else if (etcPageFlg === true) {
-        console.log("その他のページです");
+        // console.log("その他のページです");
         // その他のページ用の処理
     } else {
         console.log("判定無し");

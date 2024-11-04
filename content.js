@@ -4,9 +4,9 @@ var etcPageFlg = false;             // その他画面判定フラグ
 
 
 /**
- * CSS変更
+ * ダークモード表示にするためのCSS
  */
-function css() {
+function applyDarkMode() {
 
     const blacModeBackgroundColor = '#252525';  // 背景色（ブラック）
     const blacModeWhiteColor = '#ffffff';  // 文字色（白）
@@ -53,14 +53,8 @@ function css() {
 
 // HTMLの構造が読み込み完了した時点で発火
 $(document).ready(function () {
-    css();
-    
-});
+    applyDarkMode();
 
-/**
- * 画面読み込み時にどの画面か判定
- */
-$(window).on('load', function () {
     var currentURL = window.location.href;
     // console.log("background.js 動作");
     // ニコレポ画面の判定
@@ -98,7 +92,7 @@ $(document).on('mouseover', function (e) {
         // console.log("ニコレポ画面用です");
         // ニコレポ画面用の処理
         handleNicoRepoPage();
-        css();
+        applyDarkMode();
 
         // 動画画面の判定
     } else if (handleVideoPageFlg === true) {

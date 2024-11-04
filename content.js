@@ -13,6 +13,9 @@ function applyDarkMode() {
     const blacModeBlueColor = '#007fff';  // 文字色（青）
     const blacModeRedColor = '#ff00ff';  // 文字色（赤）
 
+    /**
+     * フォロー新着
+     */
     // 背景黒、文字白
     $('.BaseLayout, .NC-Tab, .UserDetailsHeader, .UserPage-header, .UserDetailsHeader-nickname, .ModalActionButton').css({
         "background-color": blacModeBackgroundColor,
@@ -47,6 +50,14 @@ function applyDarkMode() {
     // 文字赤
     $('.TimelineItem-activityCreatedAt').css({
         'color': blacModeRedColor
+    });
+
+    /**
+     * 履歴
+     */
+    // 文字白
+    $('.NC-VideoMediaObjectOwnerInfo-link, .NC-MediaObject, .NC-MediaObjectTitle').css({
+        'color': blacModeWhiteColor
     });
 
 }
